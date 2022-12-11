@@ -143,3 +143,44 @@ exports.getDiaryDay = function (req, res) {
     }
   );
 };
+
+exports.getDiaryFeed = function (req, res) {
+  // console.log(asdf);
+  var today = Math.floor(Date.now() / 1000);
+
+  var checkDate = new Date(today * 1000);
+  var year = checkDate.getFullYear();
+  var month =
+    checkDate.getMonth() + 1 >= 10
+      ? checkDate.getMonth() + 1
+      : "0" + checkDate.getMonth() + 1;
+  var day =
+    checkDate.getDate() >= 10 ? checkDate.getDate() : "0" + checkDate.getDate();
+
+  var startDate = `${year}-${month}-${day}`;
+
+  connection.query(
+    `SELECT diary_item.*, todouser.nickname, todouser.mymsg, todouser.profile FROM diary_item LEFT JOIN todouser ON todouser.id=diary_item.user_id WHERE diary_item.date='${startDate}';`,
+    function (error, results, fields) {
+      if (error) {
+        res.send({
+          code: 400,
+          failed: "error ocurred : " + error,
+        });
+      } else {
+        if (results.length > 0) {
+          console.log(results);
+          res.send({
+            code: 200,
+            data: results,
+          });
+        } else {
+          res.send({
+            code: 205,
+            msg: "NO TO DO",
+          });
+        }
+      }
+    }
+  );
+};

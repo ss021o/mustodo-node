@@ -84,6 +84,7 @@ router.get("/search/todo", todo.getOpenTodo);
 // TODO : Diary
 router.post("/:nickname/diary", diary.createDiary);
 router.get("/:nickname/diary/d/:date", diary.getDiaryDay);
+router.get("/diary", diary.getDiaryFeed);
 // router.get("/:nickname/diary/all", diary.getAllDiary);
 // router.get("/:nickname/diary", diary.getDiary);
 
