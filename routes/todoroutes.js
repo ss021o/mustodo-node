@@ -183,6 +183,7 @@ exports.getTodayTodo = function (req, res) {
         });
       } else {
         if (results.length > 0) {
+          console.log(results);
           res.send({
             code: 200,
             data: results,
@@ -203,6 +204,7 @@ exports.getMonthTodo = function (req, res) {
   var nickname = req.params.nickname;
   var checkedDate = req.params.date;
 
+  console.log(checkedDate);
   var checkDate = new Date(checkedDate * 1000);
   var year = checkDate.getFullYear();
   var month =
@@ -278,6 +280,7 @@ exports.getDayTodo = function (req, res) {
         });
       } else {
         if (results.length > 0) {
+          console.log(result);
           res.send({
             code: 200,
             data: results,
@@ -294,25 +297,15 @@ exports.getDayTodo = function (req, res) {
 };
 
 //할 일 완료하기
-exports.getDayTodo = function (req, res) {
-  var nickname = req.params.nickname;
-  var checkedDate = req.params.date;
+exports.setTodoCheck = function (req, res) {
+  var name = req.params.nickname
+  var todoId = req.params.id
+  var check = req.params.checked == 'true' ? 1 : 0
 
-  var checkDate = new Date(checkedDate * 1000);
-  var year = checkDate.getFullYear();
-  var month =
-    checkDate.getMonth() + 1 >= 10
-      ? checkDate.getMonth() + 1
-      : "0" + checkDate.getMonth() + 1;
-  var day =
-    checkDate.getDate() >= 10 ? checkDate.getDate() : "0" + checkDate.getDate();
-
-  var startDate = `${year}-${month}-${day}`;
-  var endDate = `${year}-${month}-${day}`;
+  console.log(todoId, check);
 
   connection.query(
-    `SELECT todo_item.* , todo_group.title AS cate, todo_group.color FROM todo_item, todo_group WHERE todo_item.user_id = (SELECT id FROM todouser WHERE nickname = ? ) AND (todo_group.id = todo_item.group_id) AND (todoDate >= '${startDate}' AND todoDate<='${endDate}');`,
-    [nickname],
+    `UPDATE todo_item SET isCheck='${check}' WHERE todo_item.id=?`,[todoId],
     function (error, results, fields) {
       if (error) {
         res.send({
@@ -320,10 +313,11 @@ exports.getDayTodo = function (req, res) {
           failed: "error ocurred : " + error,
         });
       } else {
+        console.log(results);
         if (results.length > 0) {
+          console.log(results);
           res.send({
-            code: 200,
-            data: results,
+            code: 200
           });
         } else {
           res.send({
@@ -338,7 +332,7 @@ exports.getDayTodo = function (req, res) {
 
 exports.getOpenTodo = function (req, res) {
   connection.query(
-    "SELECT todo_item.*, todouser.nickname, todouser.profile, todouser.mymsg  FROM todo_item, todouser WHERE todo_item.isOpen=1 AND (todouser.id = todo_item.user_id);",
+    "SELECT todo.title, todouser.nickname, todouser.profile, todouser.mymsg, todo_group.color FROM todo_item as todo LEFT JOIN todo_group ON todo_group.id=todo.group_id JOIN todouser ON todo.user_id=todouser.id WHERE todo.isOpen=1;",
     [],
     function (error, results, fields) {
       if (error) {

@@ -72,7 +72,7 @@ router.get("/:nickname/todo/m/:date", todo.getMonthTodo); //ok
 router.get("/:nickname/todo/d/:date", todo.getDayTodo); //ok
 router.get("/:nickname/todo/t", todo.getTodayTodo); //ok
 
-router.patch("/:nickname/todo/:id/checked", todo.getTodoGroup);
+router.patch("/:nickname/todo/:id/check/:checked", todo.setTodoCheck);
 router.put("/:nickname/todo/:id", todo.getTodoGroup);
 router.delete("/:nickname/todo/:id", todo.getTodoGroup);
 
