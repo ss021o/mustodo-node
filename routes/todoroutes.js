@@ -269,7 +269,7 @@ exports.getDayTodo = function (req, res) {
   var startDate = `${year}-${month}-${day}`;
 
   connection.query(
-    `SELECT todo_item.*, todo_group.title as cate, todo_group.color FROM todo_item LEFT JOIN todo_group ON todo_item.group_id=todo_group.id LEFT JOIN todouser ON todouser.id=todo_item.user_id WHERE todo_item.todoDate='${startDate}';`,
+    `SELECT todo_item.*, todo_group.title as cate, todo_group.color FROM todo_item LEFT JOIN todo_group ON todo_item.group_id=todo_group.id LEFT JOIN todouser ON todouser.id=todo_item.user_id WHERE todo_item.todoDate='${startDate}' AND todouser.nickname=?;`,
     [nickname],
     function (error, results, fields) {
       if (error) {
