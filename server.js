@@ -94,6 +94,18 @@ router.get("/search/todo", todo.getOpenTodo);
 // router.get("/:nickname/diary/:id/comments", diary.setDiary);
 router.get("/search/diary", diary.getOpenDiary);
 
+//TODO : FAMOUS
+router.get("/famous/today", famous.getTodayFamous);
+router.get("/famous/all", famous.getAllFamous);
+router.get("/famous/:id/likeon", famous.getAllFamous);
+router.get("/famous/:id/likeoff", famous.getAllFamous);
+
+//TODO : USER
+router.get("/:nickname/todo/stat/t", user.getTodayTodoCounts);
+router.get("/:nickname/todo/stat/m/:date/all", user.getMonthTotalStats);
+router.get("/:nickname/todo/stat/m/:date/checked", user.getMonthCheckedStats);
+router.post("/:nickname/goal", user.setGoal);
+
 app.use("/api", router);
 
 app.listen(app.get("port"), () => {
