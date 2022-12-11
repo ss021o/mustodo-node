@@ -267,10 +267,9 @@ exports.getDayTodo = function (req, res) {
     checkDate.getDate() >= 10 ? checkDate.getDate() : "0" + checkDate.getDate();
 
   var startDate = `${year}-${month}-${day}`;
-  var endDate = `${year}-${month}-${day}`;
 
   connection.query(
-    `SELECT * FROM todo_item WHERE user_id = (SELECT id FROM todouser WHERE nickname = ?) AND (todoDate >= '${startDate}' AND todoDate<='${endDate}');`,
+    `SELECT todo_item.*, todo_group.title as cate, todo_group.color FROM todo_item LEFT JOIN todo_group ON todo_item.group_id=todo_group.id LEFT JOIN todouser ON todouser.id=todo_item.user_id WHERE todo_item.todoDate='${startDate}';`,
     [nickname],
     function (error, results, fields) {
       if (error) {
@@ -280,7 +279,7 @@ exports.getDayTodo = function (req, res) {
         });
       } else {
         if (results.length > 0) {
-          console.log(result);
+          console.log(results);
           res.send({
             code: 200,
             data: results,
@@ -332,7 +331,7 @@ exports.setTodoCheck = function (req, res) {
 
 exports.getOpenTodo = function (req, res) {
   connection.query(
-    "SELECT todo.title, todouser.nickname, todouser.profile, todouser.mymsg, todo_group.color FROM todo_item as todo LEFT JOIN todo_group ON todo_group.id=todo.group_id JOIN todouser ON todo.user_id=todouser.id WHERE todo.isOpen=1;",
+    "SELECT todo.title, todouser.nickname, todouser.profile, todouser.mymsg, todo_group.color FROM todo_item as todo LEFT JOIN todo_group ON todo_group.id=todo.group_id JOIN todouser ON todo.user_id=todouser.id WHERE todo.isOpen=1 ;",
     [],
     function (error, results, fields) {
       if (error) {
